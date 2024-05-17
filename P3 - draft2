@@ -1,0 +1,164 @@
+-- Step 1: Create the database
+USE master;
+GO
+
+IF DB_ID('db_animal_shelter') IS NOT NULL
+BEGIN
+    DROP DATABASE db_animal_shelter;
+END;
+GO
+
+CREATE DATABASE db_animal_shelter;
+GO
+
+-- Step 2: Select the database
+USE db_animal_shelter;
+GO
+
+-- Step 3: Creating the staging table and inserting data
+IF OBJECT_ID('dbo.stagingTable', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE dbo.stagingTable;
+END;
+GO
+
+CREATE TABLE dbo.stagingTable (
+    [License Issue Date] DATE NOT NULL PRIMARY KEY,
+    [License Number] VARCHAR(7) NOT NULL,
+    [Animals Name] VARCHAR(50),
+    Species VARCHAR(4) NOT NULL,
+    [Primary Breed] VARCHAR(46) NOT NULL,
+    [Secondary Breed] VARCHAR(46),
+    [ZIP Code] VARCHAR(7)
+);
+
+-- Insert data into stagingTable
+INSERT INTO dbo.stagingTable ([License Issue Date], [License Number], [Animals Name], Species, [Primary Breed], [Secondary Breed], [ZIP Code])
+VALUES ('2015-12-18', 'S107948', 'Zen', 'Cat', 'Domestic Longhair', 'Mix', '98117'),
+       ('2016-06-14', 'S116503', 'Misty', 'Cat', 'Siberian', NULL, '98117'),
+       ('2016-08-04', 'S119301', 'Lyra', 'Cat', 'Mix', NULL, '98121'),
+       -- (Add the remaining insert statements similarly)
+       -- Ensure all date formats are corrected to YYYY-MM-DD
+       ('2022-05-25', '8038482', 'Baku', 'Cat', 'Mix', 'Mix', '98112');
+
+-- Step 4: Create the db_animal_shelter table
+IF OBJECT_ID('dbo.db_animal_shelter', 'U') IS NOT NULL
+BEGIN
+    DROP TABLE dbo.db_animal_shelter;
+END;
+GO
+
+CREATE TABLE dbo.db_animal_shelter (
+    shelter_id INT IDENTITY(1,1) PRIMARY KEY,
+    customer_id INT NOT NULL,
+    dogs_id INT NOT NULL,
+    cats_id INT NOT NULL,
+    year_id INT NOT NULL,
+    volunteers_id INT NOT NULL,
+    zip_id INT NOT NULL,
+    shelter_customer_info AS (CONCAT('Shelter: ', shelter_id, ' - Customer: ', customer_id))
+);
+
+-- Step 5: Add foreign key constraints
+ALTER TABLE dbo.db_animal_shelter
+ADD CONSTRAINT fk_dogs FOREIGN KEY (dogs_id) REFERENCES dbo.stagingTable ([License Number]),
+    CONSTRAINT fk_cats FOREIGN KEY (cats_id) REFERENCES dbo.stagingTable ([License Number]),
+    CONSTRAINT fk_year FOREIGN KEY (year_id) REFERENCES dbo.stagingTable ([License Number]),
+    CONSTRAINT fk_volunteers FOREIGN KEY (volunteers_id) REFERENCES dbo.stagingTable ([License Number]),
+    CONSTRAINT fk_zip FOREIGN KEY (zip_id) REFERENCES dbo.stagingTable ([License Number]);
+
+-- Step 6: Add a check constraint
+ALTER TABLE dbo.db_animal_shelter
+ADD CONSTRAINT chk_zip_id_positive CHECK (zip_id > 0);
+
+-- Step 7: Create stored procedure
+IF OBJECT_ID('dbo.InsertAnimalShelterRow', 'P') IS NOT NULL
+BEGIN
+    DROP PROCEDURE dbo.InsertAnimalShelterRow;
+END;
+GO
+
+CREATE PROCEDURE dbo.InsertAnimalShelterRow (
+    @p_shelter_id INT,
+    @p_customer_id INT,
+    @p_dogs_id INT,
+    @p_cats_id INT,
+    @p_year_id INT,
+    @p_volunteers_id INT,
+    @p_zip_id INT,
+    @p_message VARCHAR(255) OUTPUT
+)
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        -- Check constraints
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_dogs_id)
+        BEGIN
+            SET @p_message = 'dogs_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_cats_id)
+        BEGIN
+            SET @p_message = 'cats_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_year_id)
+        BEGIN
+            SET @p_message = 'year_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_volunteers_id)
+        BEGIN
+            SET @p_message = 'volunteers_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_zip_id)
+        BEGIN
+            SET @p_message = 'zip_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_shelter_id)
+        BEGIN
+            SET @p_message = 'shelter_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE [License Number] = @p_customer_id)
+        BEGIN
+            SET @p_message = 'customer_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        -- Insert data
+        INSERT INTO dbo.db_animal_shelter (customer_id, dogs_id, cats_id, year_id, volunteers_id, zip_id)
+        VALUES (@p_customer_id, @p_dogs_id, @p_cats_id, @p_year_id, @p_volunteers_id, @p_zip_id);
+
+        COMMIT;
+        SET @p_message = 'Data inserted successfully.';
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        SET @p_message = 'An error occurred while inserting the data.';
+    END CATCH
+END;
+GO
+
+-- Example of how to call the stored procedure
+-- DECLARE @message VARCHAR(255);
+-- EXEC dbo.InsertAnimalShelterRow @p_shelter_id = 1, @p_customer_id = 1, @p_dogs_id = 1, @p_cats_id = 1, @p_year_id = 1, @p_volunteers_id = 1, @p_zip_id = 1, @p_message = @message OUTPUT;
+-- SELECT @message;
+
