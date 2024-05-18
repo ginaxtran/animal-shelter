@@ -1,0 +1,111 @@
+-- Heena Vahora, Marthin Mandig, Gina Tran, Suma Vegesna
+-- Group 4
+-- INFO 330 BA
+-- Project Deliverable 3: Physical Design and Database Implementation
+
+/* Create the database */
+USE master;
+GO
+
+IF DB_ID('db_animal_shelter') IS NOT NULL
+    DROP DATABASE db_animal_shelter;
+GO
+
+CREATE DATABASE db_animal_shelter;
+GO
+
+/* Select the database */
+USE db_animal_shelter;
+GO
+
+/* Create tables for each entity */
+-- Customers Table
+-- Heena Vahora
+CREATE TABLE Customers (
+    CustomerID INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100),
+    Phone VARCHAR(15)
+);
+
+-- Dogs Table
+-- Marthin Mandig
+CREATE TABLE Dogs (
+    DogsID INT IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Breed VARCHAR(50) NOT NULL,
+    Age INT,
+    CustomerID INT
+);
+
+-- Cats Table
+-- Gina Tran
+CREATE TABLE Cats (
+    CatsID INT IDENTITY(1,1) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
+    Breed VARCHAR(50) NOT NULL,
+    Age INT,
+    CustomerID INT
+);
+
+-- Years Table
+-- Suma Vegesna
+CREATE TABLE Years (
+    YearID INT IDENTITY(1,1) PRIMARY KEY,
+    Year INT NOT NULL
+);
+
+-- Volunteers Table
+-- Gina Tran, Suma Vegesna
+CREATE TABLE Volunteers (
+    VolunteersID INT IDENTITY(1,1) PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Email VARCHAR(100),
+    Phone VARCHAR(15)
+);
+
+-- ZIP Codes Table
+-- Heena Vahora, Marthin Mandig
+CREATE TABLE ZIPCodes (
+    ZIPID INT IDENTITY(1,1) PRIMARY KEY,
+    ZIPCode VARCHAR(10) NOT NULL
+);
+
+/* Create the main table with computed columns and constraints */
+CREATE TABLE Shelter (
+    ShelterID INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerID INT NOT NULL,
+    DogsID INT NOT NULL,
+    CatsID INT NOT NULL,
+    YearID INT NOT NULL,
+    VolunteersID INT NOT NULL,
+    ZIPID INT NOT NULL,
+    ShelterCustomerInfo AS (CONCAT('Shelter: ', ShelterID, ' - Customer: ', CustomerID)),
+    CONSTRAINT fk_Customer FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    CONSTRAINT fk_Dogs FOREIGN KEY (DogsID) REFERENCES Dogs(DogsID),
+    CONSTRAINT fk_Cats FOREIGN KEY (CatsID) REFERENCES Cats(CatsID),
+    CONSTRAINT fk_Year FOREIGN KEY (YearID) REFERENCES Years(YearID),
+    CONSTRAINT fk_Volunteers FOREIGN KEY (VolunteersID) REFERENCES Volunteers(VolunteersID),
+    CONSTRAINT fk_ZIP FOREIGN KEY (ZIPID) REFERENCES ZIPCodes(ZIPID)
+);
+
+/* Populate the tables with data */
+/* Example data */
+INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES ('John', 'Doe', 'john.doe@example.com', '555-1234');
+INSERT INTO Dogs (Name, Breed, Age, CustomerID) VALUES ('Rex', 'Labrador', 5, 1);
+INSERT INTO Cats (Name, Breed, Age, CustomerID) VALUES ('Whiskers', 'Siamese', 3, 1);
+INSERT INTO Years (Year) VALUES (2021);
+INSERT INTO Volunteers (FirstName, LastName, Email, Phone) VALUES ('Jane', 'Smith', 'jane.smith@example.com', '555-5678');
+INSERT INTO ZIPCodes (ZIPCode) VALUES ('98101');
+
+/* Example row insertion for the main table */
+INSERT INTO Shelter (CustomerID, DogsID, CatsID, YearID, VolunteersID, ZIPID) VALUES (1, 1, 1, 1, 1, 1);
+select * FROM Customers
+select * FROM Dogs
+select * FROM Cats
+select * FROM Years
+select * FROM Volunteers
+select * FROM ZIPCodes
+
