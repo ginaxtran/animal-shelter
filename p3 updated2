@@ -1,0 +1,126 @@
+INFO 330 BA 
+GROUP 4
+5/17/24 */
+
+-- Step 1: Create the database
+USE master;
+GO
+
+CREATE DATABASE db_animal_shelter;
+GO
+
+-- Step 2: Select the database
+USE db_animal_shelter;
+GO
+
+-- Step 3: Creating the staging table and inserting data
+DROP TABLE IF EXISTS animalshelter;
+CREATE TABLE dbo.animalshelter (
+    animalshelterid DATE NOT NULL PRIMARY KEY ,
+    AnimalsName VARCHAR(50),
+    Species VARCHAR(4) NOT NULL,
+    PrimaryBreed VARCHAR(46) NOT NULL,
+    SecondaryBreed VARCHAR(46),
+    ZIPCode VARCHAR(7)
+);
+GO
+
+ALTER TABLE dbo.animalshelter
+ADD CONSTRAINT UQ_AnimalshelterID UNIQUE (animalshelterid);
+GO
+
+INSERT INTO dbo.animalshelter (animalshelterid, AnimalsName, Species, PrimaryBreed, SecondaryBreed, ZIPCode)
+VALUES 
+    ('2017-05-10', 'Toby', 'Dog', 'Bulldog', 'Mix', '98102'),
+    ('2017-09-30', 'Luna', 'Cat', 'Ragdoll', 'Mix', '98104'),
+    ('2023-09-29', 'Buster', 'Cat', 'Manx', 'Mix', '98138'),
+    ('2022-05-25', 'Baku', 'Cat', 'Mix', 'Mix', '98112');
+GO
+
+SELECT TOP 10 * FROM animalshelter;
+
+-- Create the LicenseIssueDate table
+DROP TABLE IF EXISTS LicenseIssueDate;
+CREATE TABLE dbo.LicenseIssueDate(
+    LicenseID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    AnimalsName VARCHAR(50),
+    LicenseDate DATE NOT NULL
+);
+GO
+
+ALTER TABLE dbo.LicenseIssueDate
+ADD CONSTRAINT UQ_LicenseID UNIQUE (LicenseID);
+GO
+
+SET IDENTITY_INSERT dbo.LicenseIssueDate ON;
+GO
+
+INSERT INTO dbo.LicenseIssueDate (LicenseID, AnimalsName, LicenseDate) 
+VALUES
+    (1,'Toby', '2017-05-10'),
+    (2,'Luna', '2017-09-30'),
+    (20,'Simba', '2016-07-15');
+GO
+
+SET IDENTITY_INSERT dbo.LicenseIssueDate OFF;
+GO
+
+SELECT TOP 10 * FROM LicenseIssueDate;
+
+-- Create the Volunteers table
+DROP TABLE IF EXISTS Volunteers;
+CREATE TABLE dbo.Volunteers (
+    VolunteerID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    VolunteerName VARCHAR(100) NOT NULL,
+    VolunteerEmail VARCHAR(100) NOT NULL,
+    VolunteerPhone VARCHAR(15) NOT NULL,
+    VolunteerStartDate DATE NOT NULL
+);
+GO
+
+ALTER TABLE dbo.Volunteers
+ADD CONSTRAINT UQ_VolunteerID UNIQUE (VolunteerID);
+GO
+
+SET IDENTITY_INSERT dbo.Volunteers ON;
+GO
+
+INSERT INTO dbo.Volunteers (VolunteerID, VolunteerName, VolunteerEmail, VolunteerPhone, VolunteerStartDate)
+VALUES
+    (1, 'John Doe', 'johndoe@example.com', '123-456-7890', '2023-01-15'),
+    (2, 'Jane Smith', 'janesmith@example.com', '234-567-8901', '2022-05-10');
+GO
+
+SET IDENTITY_INSERT dbo.Volunteers OFF;
+GO
+
+SELECT TOP 10 * FROM Volunteers;
+
+-- Create the Customers table
+DROP TABLE IF EXISTS Customers;
+CREATE TABLE dbo.Customers (
+    CustomerID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    CustomerName VARCHAR(100) NOT NULL,
+    CustomerEmail VARCHAR(100) NOT NULL,
+    CustomerPhone VARCHAR(15) NOT NULL,
+    CustomerAddress VARCHAR(255) NOT NULL
+);
+GO
+
+ALTER TABLE dbo.Customers
+ADD CONSTRAINT UQ_CustomerID UNIQUE (CustomerID);
+GO
+
+SET IDENTITY_INSERT dbo.Customers ON;
+GO
+
+INSERT INTO dbo.Customers (CustomerID, CustomerName, CustomerEmail, CustomerPhone, CustomerAddress)
+VALUES
+    (1, 'Alice Johnson', 'alicej@example.com', '345-678-9012', '123 Main St, Cityville, ST 12345'),
+    (2, 'Bob Brown', 'bobbrown@example.com', '456-789-0123', '456 Elm St, Townsville, ST 67890');
+GO
+
+SET IDENTITY_INSERT dbo.Customers OFF;
+GO
+
+SELECT TOP 10 * FROM Customers;
