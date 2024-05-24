@@ -1,7 +1,3 @@
-INFO 330 BA 
-GROUP 4
-5/17/24 */
-
 -- Step 1: Create the database
 USE master;
 GO
@@ -16,7 +12,7 @@ GO
 -- Step 3: Creating the staging table and inserting data
 DROP TABLE IF EXISTS animalshelter;
 CREATE TABLE dbo.animalshelter (
-    animalshelterid DATE NOT NULL PRIMARY KEY ,
+    animalshelterid DATE NOT NULL PRIMARY KEY,
     AnimalsName VARCHAR(50),
     Species VARCHAR(4) NOT NULL,
     PrimaryBreed VARCHAR(46) NOT NULL,
@@ -33,6 +29,7 @@ INSERT INTO dbo.animalshelter (animalshelterid, AnimalsName, Species, PrimaryBre
 VALUES 
     ('2017-05-10', 'Toby', 'Dog', 'Bulldog', 'Mix', '98102'),
     ('2017-09-30', 'Luna', 'Cat', 'Ragdoll', 'Mix', '98104'),
+    -- ... [Additional data as needed]
     ('2023-09-29', 'Buster', 'Cat', 'Manx', 'Mix', '98138'),
     ('2022-05-25', 'Baku', 'Cat', 'Mix', 'Mix', '98112');
 GO
@@ -57,9 +54,10 @@ GO
 
 INSERT INTO dbo.LicenseIssueDate (LicenseID, AnimalsName, LicenseDate) 
 VALUES
-    (1,'Toby', '2017-05-10'),
-    (2,'Luna', '2017-09-30'),
-    (20,'Simba', '2016-07-15');
+    (1, 'Toby', '2017-05-10'),
+    (2, 'Luna', '2017-09-30'),
+    -- ... [Additional data as needed]
+    (20, 'Simba', '2016-07-15');
 GO
 
 SET IDENTITY_INSERT dbo.LicenseIssueDate OFF;
@@ -89,6 +87,7 @@ INSERT INTO dbo.Volunteers (VolunteerID, VolunteerName, VolunteerEmail, Voluntee
 VALUES
     (1, 'John Doe', 'johndoe@example.com', '123-456-7890', '2023-01-15'),
     (2, 'Jane Smith', 'janesmith@example.com', '234-567-8901', '2022-05-10');
+    -- ... [Additional data as needed]
 GO
 
 SET IDENTITY_INSERT dbo.Volunteers OFF;
@@ -117,10 +116,65 @@ GO
 INSERT INTO dbo.Customers (CustomerID, CustomerName, CustomerEmail, CustomerPhone, CustomerAddress)
 VALUES
     (1, 'Alice Johnson', 'alicej@example.com', '345-678-9012', '123 Main St, Cityville, ST 12345'),
-    (2, 'Bob Brown', 'bobbrown@example.com', '456-789-0123', '456 Elm St, Townsville, ST 67890');
+    (2, 'Bob Brown', 'bobbrown@example.com', '456-789-0123', '456 Elm St, Townsville, ST 67890'),
+    (3, 'Charlie Davis', 'charlied@example.com', '567-890-1234', '789 Maple Ave, Villagetown, ST 23456'),
+    (4, 'Diana Evans', 'dianaev@example.com', '678-901-2345', '101 Pine St, Hamletville, ST 34567'),
+    (5, 'Ethan Foster', 'ethanf@example.com', '789-012-3456', '202 Oak St, Smalltown, ST 45678'),
+    (6, 'Fiona Green', 'fionag@example.com', '890-123-4567', '303 Birch St, Littleville, ST 56789'),
+    (7, 'George Harris', 'georgeh@example.com', '901-234-5678', '404 Cedar St, Minitown, ST 67890'),
+    (8, 'Hannah Iverson', 'hannahiv@example.com', '012-345-6789', '505 Spruce St, Microtown, ST 78901'),
+    (9, 'Ivan Jackson', 'ivanj@example.com', '123-456-7890', '606 Aspen St, Teentown, ST 89012'),
+    (10, 'Jackie King', 'jackiek@example.com', '234-567-8901', '707 Redwood St, Macroville, ST 90123');
 GO
 
 SET IDENTITY_INSERT dbo.Customers OFF;
 GO
 
 SELECT TOP 10 * FROM Customers;
+
+-- Create the Volunteers table
+DROP TABLE IF EXISTS Volunteers;
+CREATE TABLE dbo.Volunteers (
+    VolunteerID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    VolunteerName VARCHAR(100) NOT NULL,
+    VolunteerEmail VARCHAR(100) NOT NULL,
+    VolunteerPhone VARCHAR(15) NOT NULL,
+    VolunteerStartDate DATE NOT NULL
+);
+GO
+
+ALTER TABLE dbo.Volunteers
+ADD CONSTRAINT UQ_VolunteerID UNIQUE (VolunteerID);
+GO
+
+SET IDENTITY_INSERT dbo.Volunteers ON;
+GO
+
+INSERT INTO dbo.Volunteers (VolunteerID, VolunteerName, VolunteerEmail, VolunteerPhone, VolunteerStartDate)
+VALUES
+    (1, 'John Doe', 'johndoe@example.com', '123-456-7890', '2023-01-15'),
+    (2, 'Jane Smith', 'janesmith@example.com', '234-567-8901', '2022-05-10'),
+    (3, 'Alice Brown', 'aliceb@example.com', '345-678-9012', '2021-03-19'),
+    (4, 'Robert Johnson', 'robertj@example.com', '456-789-0123', '2020-08-22'),
+    (5, 'Emily Davis', 'emilyd@example.com', '567-890-1234', '2019-11-30'),
+    (6, 'Michael Wilson', 'michaelw@example.com', '678-901-2345', '2018-07-15'),
+    (7, 'Sarah Miller', 'sarahm@example.com', '789-012-3456', '2017-09-05'),
+    (8, 'David Lee', 'davidl@example.com', '890-123-4567', '2016-04-18'),
+    (9, 'Laura Garcia', 'laurag@example.com', '901-234-5678', '2015-02-20'),
+    (10, 'James Martinez', 'jamesm@example.com', '012-345-6789', '2014-12-10'),
+    (11, 'Patricia Rodriguez', 'patriciar@example.com', '123-456-7890', '2013-06-15'),
+    (12, 'Linda Hernandez', 'lindah@example.com', '234-567-8901', '2012-01-25'),
+    (13, 'Barbara Moore', 'barbaram@example.com', '345-678-9012', '2011-03-30'),
+    (14, 'Elizabeth Taylor', 'elizabetht@example.com', '456-789-0123', '2010-10-12'),
+    (15, 'Thomas Anderson', 'thomasa@example.com', '567-890-1234', '2009-05-19'),
+    (16, 'Christopher Thomas', 'christophert@example.com', '678-901-2345', '2008-08-28'),
+    (17, 'Daniel Jackson', 'danielj@example.com', '789-012-3456', '2007-07-07'),
+    (18, 'Matthew White', 'mattheww@example.com', '890-123-4567', '2006-02-14'),
+    (19, 'Anthony Harris', 'anthonyh@example.com', '901-234-5678', '2005-11-23'),
+    (20, 'Mark Lewis', 'markl@example.com', '012-345-6789', '2004-09-01');
+GO
+
+SET IDENTITY_INSERT dbo.Volunteers OFF;
+GO
+
+SELECT TOP 10 * FROM Volunteers;
