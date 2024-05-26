@@ -1,0 +1,433 @@
+/* Marthin Mandig, Heena, Suma, Gina
+INFO 330 BA 
+GROUP 4
+5/17/24 */
+
+-- Step 1: Create the database
+USE master;
+GO
+
+
+CREATE DATABASE db_animal_shelter;
+GO
+
+-- Step 2: Select the database
+DROP TABLE IF EXISTS db_animal_shelter
+USE db_animal_shelter;
+GO
+
+-- Insert data into stagingTable
+-- Step 3: Creating the staging table and inserting data
+DROP TABLE IF EXISTS animalshelter
+CREATE TABLE dbo.animalshelter (
+    animalshelterId INT NOT NULL PRIMARY KEY ,
+    AnimalsName VARCHAR(50),
+    Species VARCHAR(4) NOT NULL,
+    PrimaryBreed VARCHAR(46) NOT NULL,
+    SecondaryBreed VARCHAR(46),
+    ZipCode VARCHAR(50) NOT NULL,
+    cats_id INT NOT NULL,
+    dogs_id VARCHAR(50) NOT NULL
+);
+GO
+
+ALTER TABLE dbo.animalshelter
+ADD CONSTRAINT UQ_Animalshelter UNIQUE (animalshelterid);
+GO
+-- Insert data into stagingTable
+-- Insert additional data into stagingTable
+--SET IDENTITY_INSERT dbo.animalshelter ON;
+--GO
+INSERT INTO dbo.animalshelter (animalshelterId, AnimalsName, Species, PrimaryBreed, cats_id, ZipCode, dogs_id)
+VALUES 
+    (1, 'Max', 'Dog', 'Labrador',  '12345', '90-7387949', '20-1148221'),
+(2, 'Bella', 'Cat', 'Siamese',  '23456', '19-3150907', '16-6902188'),
+(3, 'Charlie', 'Dog', 'Poodle',  '34567', '58-1513607', '68-1733092'),
+(4, 'Lucy', 'Cat', 'Persian', '45678', '79-2436185', '95-0341283'),
+(5, 'Rocky', 'Dog', 'Bulldog',  '56789', '54-5854045', '20-6601808'),
+(6, 'Luna', 'Cat', 'Bengal', '67890', '33-2908445', '67-4826436'),
+(7, 'Daisy', 'Dog', 'Beagle',  '78901', '02-5504702', '27-6256588'),
+(8, 'Nala', 'Cat', 'Sphynx',  '89012', '08-6618323', '58-0418056'),
+(9, 'Bailey', 'Dog', 'Chihuahua', '90123', '28-5353836', '25-8289663'),
+(10, 'Sadie', 'Cat', 'Maine Coon',  '01234', '24-3131740', '86-8122481'),
+(11, 'Oliver', 'Dog', 'Dachshund',  '12345', '72-3571383', '28-1309529'),
+(12, 'Molly', 'Cat', 'British Shorthair', '23456', '15-5886693', '49-7534266'),
+(13, 'Oscar', 'Dog', 'Cocker Spaniel',  '34567', '11-4447777', '02-7456076'),
+(14, 'Simba', 'Cat', 'Abyssinian', '45678', '63-5887375', '74-0465625'),
+(15, 'Toby', 'Dog', 'Golden Retriever',  '56789', '81-8719714', '43-1714081'),
+(16, 'Ginger', 'Cat', 'Oriental Shorthair',  '67890', '64-4136131', '36-6682452'),
+(17, 'Buddy', 'Dog', 'Shih Tzu',  '78901', '13-4614288', '74-8789345'),
+(18, 'Kitty', 'Cat', 'Scottish Fold',  '89012', '18-6868094', '18-0223284'),
+(19, 'Rusty', 'Dog', 'Boxer',  '90123', '98-2715558', '01-2761572'),
+(20, 'Chloe', 'Cat', 'Ragdoll',  '01234', '70-3993742', '30-8758231'),
+(21, 'Jake', 'Dog', 'Yorkshire Terrier',  '12345', '10-8439932', '92-1947106'),
+(22, 'Milo', 'Cat', 'Russian Blue',  '23456', '19-4243661', '01-1305983'),
+(23, 'Loki', 'Dog', 'Siberian Husky',  '34567', '96-2055129', '38-7393793'),
+(24, 'Kiki', 'Cat', 'Burmese',  '45678', '30-6713017', '10-7589477'),
+(25, 'Finn', 'Dog', 'French Bulldog',  '56789', '76-9155251', '41-7239396'),
+(26, 'Misty', 'Cat', 'Tonkinese',  '67890', '15-2242735', '15-3640602'),
+(27, 'Oreo', 'Dog', 'Border Collie',  '78901', '47-5237353', '20-5526626'),
+(28, 'Benny', 'Cat', 'Himalayan','89012', '29-4747760', '48-2044533'),
+(29, 'Cooper', 'Dog', 'Saint Bernard', '90123', '85-5197269', '44-9848358'),
+(30, 'Gizmo', 'Cat', 'Cornish Rex',  '01234', '46-9810821', '72-0167142'),
+(31, 'Rex', 'Dog', 'German Shepherd',  '12345', '79-6807410', '86-2673055'),
+(32, 'Smokey', 'Cat', 'Manx',  '23456', '35-6680071', '84-9231061'),
+(33, 'Bear', 'Dog', 'Newfoundland', '34567', '82-0925868', '65-3472690'),
+(34, 'Tommy', 'Cat', 'Selkirk Rex',  '45678', '77-1551565', '90-2483345'),
+(35, 'Henry', 'Dog', 'Dalmatian',  '56789', '44-6361471', '53-1959938'),
+(36, 'Maggie', 'Cat', 'Snowshoe',  '67890', '25-4991661', '17-4004374');
+GO
+--check table structure
+SELECT TOP 10 * FROM animalshelter
+
+DROP TABLE IF EXISTS LicenseIssueDate
+CREATE TABLE dbo.LicenseIssueDate(
+    LicenseID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    AnimalsName VARCHAR(50),
+    LicenseDate DATE NOT NULL
+);
+GO
+
+ALTER TABLE dbo.LicenseIssueDate
+ADD CONSTRAINT UQ_LicenseIssueID UNIQUE (LicenseID);
+GO
+
+SET IDENTITY_INSERT dbo.LicenseIssueDate ON;
+GO
+INSERT INTO dbo.LicenseIssueDate (LicenseID, AnimalsName, LicenseDate) VALUES
+    (1,'Toby', '2017-05-10'),
+    (2,'Luna', '2017-09-30'),
+    (3,'Coco', '2018-12-18'),
+    (4,'Rocky', '2019-06-21'),
+    (5,'Molly', '2020-05-17'),
+    (6,'Chloe', '2021-11-11'),
+    (7,'Bailey', '2022-07-22'),
+    (8,'Stella', '2022-10-19'),
+    (9,'Ruby', '2023-01-07'),
+    (10,'Loki', '2023-03-15'),
+    (11,'Shadow', '2016-02-11'),
+    (12,'Buddy', '2017-04-16'),
+    (13,'Nala', '2018-08-25'),
+    (14,'Finn', '2019-03-14'),
+    (15,'Gizmo', '2020-06-18'),
+    (16,'Jasper', '2021-01-25'),
+    (17,'Lilly', '2021-09-30'),
+    (18,'Riley', '2022-12-13'),
+    (19,'Zeus', '2023-05-24'),
+    (20,'Simba', '2016-07-15')
+GO
+
+SET IDENTITY_INSERT dbo.LicenseIssueDate OFF
+GO
+
+SELECT TOP 10 * FROM LicenseIssueDate
+
+DROP TABLE IF EXISTS AnimalsName
+    CREATE TABLE dbo.AnimalsName (
+        NameID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+        NameAnimal VARCHAR(60) NOT NULL,
+        AnimalAge INTEGER NOT NULL
+    );
+GO
+
+-- Insert data into AnimalsName
+SET IDENTITY_INSERT dbo.AnimalsName ON;
+GO
+INSERT INTO dbo.AnimalsName (NameID, NameAnimal, AnimalAge) VALUES
+    (1, 'Toby', 5),
+    (2, 'Luna', 3),
+    (3, 'Coco', 7),
+    (4, 'Rocky', 4),
+    (5, 'Molly', 2),
+    (6, 'Chloe', 6),
+    (7, 'Bailey', 3),
+    (8, 'Stella', 1),
+    (9, 'Ruby', 4),
+    (10, 'Loki', 2),
+    (11, 'Shadow', 8),
+    (12, 'Buddy', 5),
+    (13, 'Nala', 4),
+    (14, 'Finn', 3),
+    (15, 'Gizmo', 6),
+    (16, 'Jasper', 7),
+    (17, 'Lilly', 2),
+    (18, 'Riley', 5),
+    (19, 'Zeus', 4),
+    (20, 'Simba', 8);
+GO
+
+-- Turn IDENTITY_INSERT OFF
+SET IDENTITY_INSERT dbo.AnimalsName OFF;
+GO
+
+SELECT TOP 10 * FROM AnimalsName
+
+
+DROP TABLE IF EXISTS Species
+    CREATE TABLE dbo.Species (
+        SpeciesID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+        NameAnimal VARCHAR(60) NOT NULL,
+        SpeciesName VARCHAR (60),
+        PrimaryBreedID INTEGER NOT NULL,
+        SecondaryBreedID INTEGER,
+        animalshelterid DATE
+    );
+GO
+
+SET IDENTITY_INSERT dbo.Species ON;
+GO
+INSERT INTO dbo.Species (SpeciesID, NameAnimal, SpeciesName, PrimaryBreedID, SecondaryBreedID, animalshelterid) VALUES
+    (1, 'Toby', 'Dog', 1, 2, '2017-05-10'),
+    (2, 'Luna', 'Cat', 3, 4, '2017-09-30'),
+    (3, 'Coco', 'Dog', 5, NULL, '2018-12-18'),
+    (4, 'Rocky', 'Dog', 6, 7, '2019-06-21'),
+    (5, 'Molly', 'Cat', 8, 9, '2020-05-17'),
+    (6, 'Chloe', 'Cat', 10, NULL, '2021-11-11'),
+    (7, 'Bailey', 'Dog', 11, 12, '2022-07-22'),
+    (8, 'Stella', 'Cat', 13, 14, '2022-10-19'),
+    (9, 'Ruby', 'Dog', 15, NULL, '2023-01-07'),
+    (10, 'Loki', 'Cat', 16, 17, '2023-03-15'),
+    (11, 'Shadow', 'Dog', 18, 19, '2016-02-11'),
+    (12, 'Buddy', 'Dog', 20, NULL, '2017-04-16'),
+    (13, 'Nala', 'Cat', 21, 22, '2018-08-25'),
+    (14, 'Finn', 'Dog', 23, 24, '2019-03-14'),
+    (15, 'Gizmo', 'Cat', 25, 26, '2020-06-18'),
+    (16, 'Jasper', 'Dog', 27, NULL, '2021-01-25'),
+    (17, 'Lilly', 'Cat', 28, 29, '2021-09-30'),
+    (18, 'Riley', 'Dog', 30, 31, '2022-12-13'),
+    (19, 'Zeus', 'Dog', 32, NULL, '2023-05-24'),
+    (20, 'Simba', 'Cat', 33, 34, '2016-07-15');
+GO
+
+-- Turn IDENTITY_INSERT OFF
+SET IDENTITY_INSERT dbo.Species OFF;
+GO
+
+SELECT TOP 10 * FROM Species
+
+
+
+DROP TABLE IF EXISTS PrimaryBreed
+    CREATE TABLE dbo.primarybreed (
+        primarybreedName VARCHAR (70) PRIMARY KEY NOT NULL,
+        SpeciesID INTEGER, 
+        AnimalsName VARCHAR (100)
+        );
+    GO
+
+INSERT INTO dbo.primarybreed (primarybreedName, SpeciesID, AnimalsName) VALUES
+    ('Bulldog', 1, 'Toby'),
+    ('Ragdoll', 2, 'Luna'),
+    ('Shih Tzu', 3, 'Coco'),
+    ('Boxer', 4, 'Rocky'),
+    ('Persian', 5, 'Molly'),
+    ('British Shorthair', 6, 'Chloe'),
+    ('Dachshund', 7, 'Bailey'),
+    ('Maine Coon', 8, 'Stella'),
+    ('Cocker Spaniel', 9, 'Ruby'),
+    ('Russian Blue', 10, 'Loki'),
+    ('Rottweiler', 11, 'Shadow'),
+    ('Pit Bull', 12, 'Buddy'),
+    ('Abyssinian', 13, 'Nala'),
+    ('Basset Hound', 14, 'Finn'),
+    ('Sphynx', 15, 'Gizmo'),
+    ('Samoyed', 16, 'Jasper'),
+    ('Savannah', 17, 'Lilly'),
+    ('Mastiff', 18, 'Riley'),
+    ('Doberman Pinscher', 19, 'Zeus'),
+    ('Egyptian Mau', 20, 'Simba'),
+    ('Great Dane', 21, 'Sophie'),
+    ('Chihuahua', 22, 'Henry'),
+    ('Chartreux', 23, 'Oscar'),
+    ('Bernese Mountain Dog', 24, 'Murphy'),
+    ('American Shorthair', 25, 'Roxy'),
+    ('Vizsla', 26, 'Benny'),
+    ('Turkish Angora', 27, 'Willow'),
+    ('Newfoundland', 28, 'Duke'),
+    ('Selkirk Rex', 29, 'Lulu'),
+    ('Weimaraner', 30, 'Jake'),
+    ('Japanese Bobtail', 31, 'Ollie'),
+    ('Akita', 32, 'Sadie'),
+    ('Snowshoe', 33, 'Piper'),
+    ('Irish Setter', 34, 'Hazel'),
+    ('Singapura', 35, 'Pepper'),
+    ('Portuguese Water Dog', 36, 'Ace'),
+    ('Manx', 37, 'Buster'),
+    ('Mix', 38, 'Baku');
+GO
+
+SELECT TOP 10 * FROM primarybreed
+
+
+-- Step 2: Drop the stagingTable
+--DROP TABLE IF EXISTS dbo.stagingTable;
+
+-- Step 3: Recreate the stagingTable
+CREATE TABLE dbo.stagingTable (
+    species VARCHAR(4) PRIMARY KEY,
+    animalshelterid INT ,
+    ZIPCode VARCHAR(7) ,
+    year_id INT ,
+    volunteers_id INT ,
+    zip_id INT ,
+    cats_id INT ,
+    dogs_id INT ,
+    CONSTRAINT UQ_animalshelterid UNIQUE (animalshelterid)
+);
+
+-- Step 4: Insert data into stagingTable
+INSERT INTO dbo.stagingTable (animalshelterid, species, ZIPCode, year_id, volunteers_id, zip_id, cats_id, dogs_id)
+VALUES
+    (7387949, 'Dog', '90210', 2022, 1001, 90210, 394737, 1234567),
+    (38848947, 'Cat', '98101', 2023, 1002, 98101, 4888389, 1148221);
+
+-- Step 5: Drop and recreate the db_animal_shelter table
+DROP TABLE IF EXISTS dbo.db_animal_shelter;
+CREATE TABLE dbo.db_animal_shelter (
+    dogs_id INT ,
+    Species VARCHAR(4) ,
+    ZIPCode VARCHAR(7) ,
+    cats_id INT ,
+    year_id INT ,
+    volunteers_id INT ,
+    zip_id INT 
+    -- Add other necessary columns
+);
+/* ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_cats;
+DROP TABLE IF EXISTS dbo.stagingTable;
+CREATE TABLE dbo.stagingTable (
+    species VARCHAR(4) PRIMARY KEY,
+    animalshelterid INT ,
+    ZIPCode VARCHAR(7) ,
+    year_id INT ,
+    volunteers_id INT ,
+    zip_id INT ,
+    cats_id INT ,
+    dogs_id INT ,
+    CONSTRAINT UQ_animalshelterid UNIQUE (animalshelterid)
+);
+GO
+    
+
+INSERT INTO dbo.stagingTable (animalshelterid, species, ZIPCode, year_id, volunteers_id, zip_id, cats_id, dogs_id)
+VALUES
+    (7387949, 'Dog', '90210', 2022, 1001, 90210, 394737, 1234567),
+    (38848947, 'Cat', '98101', 2023, 1002, 98101, 4888389, 1148221);
+
+
+-- Create db_animal_shelter table
+ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_stagingTable;
+DROP TABLE IF EXISTS dbo.db_animal_shelter;
+CREATE TABLE dbo.db_animal_shelter (
+    dogs_id INT ,
+    Species VARCHAR(4) ,
+    ZIPCode VARCHAR(7) ,
+    cats_id INT ,
+    year_id INT ,
+    volunteers_id INT ,
+    zip_id INT 
+    -- Add other necessary columns
+);
+GO */
+
+-- Step 5: Add foreign key constraints
+ALTER TABLE dbo.db_animal_shelter
+ADD CONSTRAINT fk_species FOREIGN KEY (Species) REFERENCES dbo.stagingTable (species),
+    CONSTRAINT fk_cats FOREIGN KEY (cats_id) REFERENCES dbo.stagingTable (animalshelterid),
+    CONSTRAINT fk_year FOREIGN KEY (year_id) REFERENCES dbo.stagingTable (animalshelterid),
+    CONSTRAINT fk_volunteers FOREIGN KEY (volunteers_id) REFERENCES dbo.stagingTable (animalshelterid),
+    CONSTRAINT fk_zipcode FOREIGN KEY (zip_id) REFERENCES dbo.stagingTable (animalshelterid);
+
+ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_species;
+ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_cats;
+ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_year;
+ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_volunteers;
+ALTER TABLE dbo.db_animal_shelter DROP CONSTRAINT fk_zipcode;
+
+-- Step 6: Add a check constraint
+ALTER TABLE dbo.db_animal_shelter
+ADD CONSTRAINT chk_zip_id_positive CHECK (CAST(ZIPCode AS INT) > 0);
+GO
+
+-- Step 7: Create stored procedure
+IF OBJECT_ID('dbo.InsertAnimalShelterRow', 'P') IS NOT NULL
+BEGIN
+    DROP PROCEDURE dbo.InsertAnimalShelterRow;
+END;
+GO
+
+
+
+CREATE PROCEDURE dbo.InsertAnimalShelterRow (
+    @p_shelter_id INT,
+    @p_customer_id INT,
+    @p_dogs_id INT,
+    @p_cats_id INT,
+    @p_year_id INT,
+    @p_volunteers_id INT,
+    @p_zip_id INT,
+    @p_message VARCHAR(255) OUTPUT
+)
+
+
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        INSERT INTO dbo.db_animal_shelter (shelter_id, customer_id, dogs_id, cats_id, year_id, volunteers_id, zip_id)
+        VALUES (@p_shelter_id, @p_customer_id, @p_dogs_id, @p_cats_id, @p_year_id, @p_volunteers_id, @p_zip_id);
+        -- Check constraints
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE dogs_id = @p_dogs_id)
+        BEGIN
+            SET @p_message = 'dogs_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE cats_id = @p_cats_id)
+        BEGIN
+            SET @p_message = 'cats_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE year_id = @p_year_id)
+        BEGIN
+            SET @p_message = 'year_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE Volunteers= @p_volunteers_id)
+        BEGIN
+            SET @p_message = 'volunteers_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE ZIPCode = @p_zip_id)
+        BEGIN
+            SET @p_message = 'zip_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE animalshelterID = @p_shelter_id)
+        BEGIN
+            SET @p_message = 'shelter_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.stagingTable WHERE LicenseID = @p_customer_id)
+        BEGIN
+            SET @p_message = 'customer_id does not exist.';
+            ROLLBACK;
+            RETURN;
+        END
+
+
+        -- Insert data
+        /*INSERT INTO dbo.db_animal_shelter (customer_id, dogs_id, cats_id, year_id, volunteers_id, zip_id)
+        VALUES(1, 20, 10, 2022, 1001, 90210); */
