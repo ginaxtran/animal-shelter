@@ -1,0 +1,90 @@
+-- Drop tables if they exist to ensure clean creation
+DROP TABLE IF EXISTS dbo.shelter;
+DROP TABLE IF EXISTS dbo.LicenseIssueDate;
+DROP TABLE IF EXISTS dbo.Animal_Adopter;
+DROP TABLE IF EXISTS dbo.Species;
+DROP TABLE IF EXISTS dbo.primarybreed;
+GO
+
+-- Correct shelter table definition
+CREATE TABLE dbo.shelter (
+    shelterId INT NOT NULL PRIMARY KEY,
+    AnimalsName VARCHAR(50),
+    Species VARCHAR(4) NOT NULL,
+    PrimaryBreedID VARCHAR(46) NOT NULL,
+    ZipCode VARCHAR(50) NOT NULL,
+    cats_id INT NOT NULL,
+    dogs_id VARCHAR(50) NOT NULL,
+    SpeciesID INT,
+    NameAdopter INT
+);
+GO
+
+-- Correct Species table definition
+CREATE TABLE dbo.Species (
+    SpeciesID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    AnimalsName VARCHAR(60) NOT NULL,
+    SpeciesType VARCHAR(60),
+    PrimaryBreedID INTEGER NOT NULL,
+    SecondaryBreedID INTEGER,
+    shelterId INT -- Changed from DATE to INT
+);
+GO
+
+-- Correct Animal_Adopter table definition
+CREATE TABLE dbo.Animal_Adopter (
+    AdopterNameID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    NameAdopter VARCHAR(60) NOT NULL,
+    AdopterAge INTEGER NOT NULL
+);
+GO
+
+-- Correct LicenseIssueDate table definition
+CREATE TABLE dbo.LicenseIssueDate(
+    LicenseID INTEGER PRIMARY KEY IDENTITY(1,1) NOT NULL,
+    NameAdopter VARCHAR(50),
+    LicenseDate DATE NOT NULL
+);
+GO
+
+-- Correct primarybreed table definition
+CREATE TABLE dbo.primarybreed (
+    primarybreedName VARCHAR (70) PRIMARY KEY NOT NULL,
+    SpeciesID INTEGER, 
+    AnimalsName VARCHAR (100)
+);
+GO
+
+-- Define foreign keys with correct data types
+ALTER TABLE dbo.shelter
+ADD CONSTRAINT fk_species FOREIGN KEY (SpeciesID) REFERENCES Species(SpeciesID),
+    CONSTRAINT fk_cats FOREIGN KEY (cats_id) REFERENCES shelter(shelterId),
+    CONSTRAINT fk_adopter FOREIGN KEY (NameAdopter) REFERENCES Animal_Adopter(AdopterNameID);
+GO
+
+-- Add data to tables
+INSERT INTO dbo.shelter (shelterId, AnimalsName, Species, PrimaryBreedID, ZipCode, cats_id, dogs_id, SpeciesID, NameAdopter)
+VALUES 
+(1, 'Max', 'Dog', 'Labrador', '12345', 1, '90-7387949', 1, 1),
+(2, 'Bella', 'Cat', 'Siamese', '23456', 2, '19-3150907', 2, 2);
+GO
+
+INSERT INTO dbo.Species (SpeciesID, AnimalsName, SpeciesType, PrimaryBreedID, SecondaryBreedID, shelterId) VALUES
+    (1, 'Toby', 'Dog', 1, 2, 1),
+    (2, 'Luna', 'Cat', 3, 4, 2);
+GO
+
+INSERT INTO dbo.Animal_Adopter(AdopterNameID, NameAdopter, AdopterAge) VALUES
+    (1, 'Toby', 5),
+    (2, 'Luna', 3);
+GO
+
+INSERT INTO dbo.LicenseIssueDate(LicenseID, NameAdopter, LicenseDate) VALUES
+    (1, 'Toby', '2023-01-01'),
+    (2, 'Luna', '2023-01-02');
+GO
+
+INSERT INTO dbo.primarybreed(primarybreedName, SpeciesID, AnimalsName) VALUES
+    ('Labrador', 1, 'Max'),
+    ('Siamese', 2, 'Bella');
+GO
