@@ -1,4 +1,4 @@
--- Heena Vahora, Marthin Mandig, Gina Tran, Suma Vegesna
+-- Marthin Mandig, Heena Vahora, Gina Tran, Suma Vegesna
 -- Group 4
 -- INFO 330 BA
 -- Project Deliverable 3: Physical Design and Database Implementation
@@ -7,15 +7,15 @@
 USE master;
 GO
 
-IF DB_ID('db_animal_shelter') IS NOT NULL
-    DROP DATABASE db_animal_shelter;
+IF DB_ID('db_animal_shelter2') IS NOT NULL
+    DROP DATABASE db_animal_shelter2;
 GO
 
-CREATE DATABASE db_animal_shelter;
+CREATE DATABASE db_animal_shelter2;
 GO
 
 /* Select the database */
-USE db_animal_shelter;
+USE db_animal_shelter2;
 GO
 
 /* Create tables for each entity */
@@ -29,6 +29,19 @@ CREATE TABLE Customers (
     Phone VARCHAR(15)
 );
 
+INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES
+('John', 'Doe', 'john.doe@example.com', '555-1234'),
+('Jane', 'Smith', 'jane.smith@example.com', '555-5678'),
+('Michael', 'Johnson', 'michael.johnson@example.com', '555-8765'),
+('Emily', 'Davis', 'emily.davis@example.com', '555-4321'),
+('Daniel', 'Brown', 'daniel.brown@example.com', '555-1111'),
+('Sophia', 'Wilson', 'sophia.wilson@example.com', '555-2222'),
+('James', 'Moore', 'james.moore@example.com', '555-3333'),
+('Olivia', 'Taylor', 'olivia.taylor@example.com', '555-4444'),
+('Alexander', 'Anderson', 'alexander.anderson@example.com', '555-5555'),
+('Emma', 'Thomas', 'emma.thomas@example.com', '555-6666');
+
+
 -- Dogs Table
 -- Marthin Mandig
 CREATE TABLE Dogs (
@@ -38,6 +51,19 @@ CREATE TABLE Dogs (
     Age INT,
     CustomerID INT
 );
+
+INSERT INTO Dogs(Name, Breed, Age, CustomerID) VALUES
+('Buddy', 'Golden Retriever', 3, 1),
+('Bella', 'Labrador Retriever', 2, 2),
+('Charlie', 'Poodle', 4, 3),
+('Max', 'Bulldog', 1, 4),
+('Lucy', 'Beagle', 5, 5),
+('Molly', 'Boxer', 3, 6),
+('Daisy', 'German Shepherd', 2, 7),
+('Bailey', 'Rottweiler', 4, 8),
+('Rocky', 'Siberian Husky', 1, 9),
+('Luna', 'Dachshund', 5, 10);
+
 
 -- Cats Table
 -- Gina Tran
@@ -49,6 +75,19 @@ CREATE TABLE Cats (
     CustomerID INT
 );
 
+INSERT INTO Cats(Name, Breed, Age, CustomerID) VALUES
+('Whiskers', 'Siamese', 3, 1),
+('Shadow', 'Maine Coon', 4, 2),
+('Simba', 'Bengal', 2, 3),
+('Luna', 'Persian', 5, 4),
+('Mittens', 'Ragdoll', 1, 5),
+('Oliver', 'Sphynx', 3, 6),
+('Bella', 'British Shorthair', 4, 7),
+('Leo', 'Scottish Fold', 2, 8),
+('Tiger', 'Abyssinian', 5, 9),
+('Milo', 'Russian Blue', 1, 10);
+
+
 -- Years Table
 -- Suma Vegesna
 CREATE TABLE Years (
@@ -56,6 +95,22 @@ CREATE TABLE Years (
     Year INT NOT NULL
 );
 
+INSERT INTO Years (Year) VALUES
+(2010),
+(2011),
+(2012),
+(2013),
+(2014),
+(2015),
+(2016),
+(2017),
+(2018),
+(2019),
+(2020),
+(2021),
+(2022),
+(2023),
+(2024);
 -- Volunteers Table
 -- Gina Tran, Suma Vegesna
 CREATE TABLE Volunteers (
@@ -66,12 +121,26 @@ CREATE TABLE Volunteers (
     Phone VARCHAR(15)
 );
 
+INSERT INTO Volunteers (FirstName, LastName, Email, Phone) VALUES
+('John', 'Doe', 'john.doe@example.com', '555-1234'),
+('Jane', 'Smith', 'jane.smith@example.com', '555-5678'),
+('Michael', 'Johnson', 'michael.johnson@example.com', '555-8765'),
+('Emily', 'Davis', 'emily.davis@example.com', '555-4321'),
+('Daniel', 'Brown', 'daniel.brown@example.com', '555-6789');
+
+
 -- ZIP Codes Table
 -- Heena Vahora, Marthin Mandig
 CREATE TABLE ZIPCodes (
     ZIPID INT IDENTITY(1,1) PRIMARY KEY,
     ZIPCode VARCHAR(10) NOT NULL
 );
+INSERT INTO ZIPCodes (ZIPCode) VALUES
+('90210'),
+('10001'),
+('60601'),
+('30301'),
+('94101');
 
 /* Create the main table with computed columns and constraints */
 CREATE TABLE Shelter (
@@ -102,10 +171,126 @@ INSERT INTO ZIPCodes (ZIPCode) VALUES ('98101');
 
 /* Example row insertion for the main table */
 INSERT INTO Shelter (CustomerID, DogsID, CatsID, YearID, VolunteersID, ZIPID) VALUES (1, 1, 1, 1, 1, 1);
-select * FROM Customers
-select * FROM Dogs
-select * FROM Cats
-select * FROM Years
-select * FROM Volunteers
-select * FROM ZIPCodes
+select * FROM Customers;
+select * FROM Dogs;
+select * FROM Cats;
+select * FROM Years;
+select * FROM Volunteers;
+select * FROM ZIPCodes;
+GO
 
+--This procedure is for the cat table to ensure that
+CREATE OR ALTER PROCEDURE insertCatSP
+@Name varchar(50), @Breed varchar(50), @Age int, @CustomerID int
+
+AS
+
+BEGIN
+	BEGIN TRAN T
+
+	--Error handling
+		IF @CustomerID IS NULL
+			BEGIN
+				PRINT '@Customer ID is null';
+				THROW 50061, '@Customer ID cannot be null; statement is terminating', 1;
+				ROLLBACK;
+			END
+
+		ELSE
+			BEGIN
+				INSERT INTO Cats([Name], Breed, Age, CustomerID)
+							VALUES(@Name, @Breed, @Age, @CustomerID)
+				COMMIT TRAN T
+				Print ('A new row of data has been inserted into Cats successfully.');
+			END
+END
+GO
+
+EXEC insertCatSP "Billy", "Siamese", 5, 1;
+GO
+
+CREATE OR ALTER PROCEDURE insertDogSP
+@Name varchar(50), @Breed varchar(50), @Age int, @CustomerID int
+
+AS
+
+BEGIN
+	BEGIN TRAN T
+
+	--Error handling
+		IF @CustomerID IS NULL
+			BEGIN
+				PRINT '@Customer ID is null';
+				THROW 50061, '@Customer ID cannot be null; statement is terminating', 1;
+				ROLLBACK;
+			END
+
+		ELSE
+			BEGIN
+				INSERT INTO Dogs([Name], Breed, Age, CustomerID)
+							VALUES(@Name, @Breed, @Age, @CustomerID)
+				COMMIT TRAN T
+				Print ('A new row of data has been inserted into Dogs successfully.');
+			END
+END
+GO
+
+EXEC insertDogSP "Jojo", "Poodle", 6, 4;
+GO
+
+CREATE OR ALTER PROCEDURE insertVolunteerSP
+@FirstName varchar(50), @LastName varchar(50), @Email varchar(100), @Phone varchar(15)
+
+AS
+
+BEGIN
+	BEGIN TRAN T
+
+	--Error handling
+		IF @Email IS NULL
+			BEGIN
+				PRINT '@Email is null';
+				THROW 50061, '@Email cannot be null; statement is terminating', 1;
+				ROLLBACK;
+			END
+
+		ELSE
+			BEGIN
+				INSERT INTO Volunteers(FirstName, LastName, Email, Phone)
+							VALUES(@FirstName, @LastName, @Email, @Phone)
+				COMMIT TRAN T
+				Print ('A new row of data has been inserted into Volunteers successfully.');
+			END
+END
+GO
+
+EXEC insertVolunteerSP "Elua", "Joy", "ej@gmail.com", "348-489-9475";
+GO
+
+--PJ 4 Question two:
+/*
+CREATE OR ALTER PROCEDURE usoGetTopSixStates
+(
+	@Prod_type VARCHAR(50),
+	@start_year INT,
+	@end_year INT
+)
+
+
+
+AS
+BEGIN
+	SELECT TOP 6 WITH TIES c.CustState, SUM(op.Calc_LineTotal) AS TotSpend
+	FROM tblCUSTOMER c
+		JOIN tblORDER o ON c.CustomerID = o.CustomerID
+		JOIN tblORDER_PRODUCT op ON o.OrderID = op.OrderID
+		JOIN tblPRODUCT p ON op.ProductID = p.ProductID
+		JOIN tblPRODUCT_TYPE pt ON p.ProdTypeID = pt.ProdTypeID
+	WHERE pt.ProdTypeName = @Prod_type
+		AND DATEPART(year,c.BirthDate) BETWEEN @start_year AND @end_year
+	GROUP BY c.CustState
+	ORDER BY TotSpend DESC
+--return the result
+	RETURN;
+END
+GO */
