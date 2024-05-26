@@ -1,0 +1,56 @@
+/* Complex Query 1: Get the count of animals by species and primary breed in each ZIP code */
+
+/* 
+Purpose: This query aims to count the number of animals by their species and primary breed in each ZIP code. 
+Managerial Implications: This information can help the shelter management understand the distribution of different species and breeds in various areas, aiding in resource allocation and targeted marketing efforts.
+*/
+
+SELECT 
+    a.ZipCode,
+    a.Species,
+    p.primarybreedName,
+    COUNT(*) AS AnimalCount
+FROM 
+    dbo.animalshelter a
+JOIN 
+    dbo.primarybreed p ON a.PrimaryBreed = p.primarybreedName
+GROUP BY 
+    a.ZipCode, a.Species, p.primarybreedName
+ORDER BY 
+    a.ZipCode, a.Species, AnimalCount DESC;
+GO
+
+/* Complex Query 2: Stored Procedure to Retrieve Animals with License Details */
+
+/* 
+Purpose: This stored procedure retrieves animals' details along with their license issue dates for a given ZIP code. 
+Managerial Implications: This helps in identifying animals in a specific area that are licensed, ensuring compliance with local regulations and helping track licensed animals more effectively.
+*/
+
+IF OBJECT_ID('dbo.GetAnimalsWithLicenseByZip', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.GetAnimalsWithLicenseByZip;
+GO
+
+CREATE PROCEDURE dbo.GetAnimalsWithLicenseByZip
+    @ZipCode VARCHAR(50)
+AS
+BEGIN
+    SELECT 
+        a.AnimalsName,
+        a.Species,
+        a.PrimaryBreed,
+        l.LicenseDate
+    FROM 
+        dbo.animalshelter a
+    JOIN 
+        dbo.LicenseIssueDate l ON a.AnimalsName = l.AnimalsName
+    WHERE 
+        a.ZipCode = @ZipCode
+    ORDER BY 
+        l.LicenseDate DESC;
+END;
+GO
+
+/* Example execution of the stored procedure */
+EXEC dbo.GetAnimalsWithLicenseByZip @ZipCode = '12345';
+GO
