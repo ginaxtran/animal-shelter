@@ -80,3 +80,108 @@ END
 GO
 
 EXEC usoGetTopYearsWithMostCustomers @Prod_type = 'Type', @start_year = 2010, @end_year = 2024;
+
+
+--Gina
+-- Query to find the most popular breed adopted for both dogs and cats for each year
+-- The results are the most popular breeds for dogs are Golden Retreivers and cats are Siamese
+-- This also calculates the most popular year to adopt dogs and cats
+
+WITH DogAdoptions AS (
+    SELECT
+        y.Year,
+        d.Breed,
+        COUNT(*) AS DogAdoptionCount
+    FROM
+        Shelter s
+    JOIN
+        Dogs d ON s.DogsID = d.DogsID
+    JOIN
+        Years y ON s.YearID = y.YearID
+    GROUP BY
+        y.Year, d.Breed
+),
+CatAdoptions AS (
+    SELECT
+        y.Year,
+        ca.Breed,
+        COUNT(*) AS CatAdoptionCount
+    FROM
+        Shelter s
+    JOIN
+        Cats ca ON s.CatsID = ca.CatsID
+    JOIN
+        Years y ON s.YearID = y.YearID
+    GROUP BY
+        y.Year, ca.Breed
+)
+-- Combining both dog and cat adoptions
+SELECT
+    Year,
+    Breed,
+    'Dog' AS AnimalType,
+    DogAdoptionCount AS AdoptionCount
+FROM
+    DogAdoptions
+UNION ALL
+SELECT
+    Year,
+    Breed,
+    'Cat' AS AnimalType,
+    CatAdoptionCount AS AdoptionCount
+FROM
+    CatAdoptions
+ORDER BY
+    Year, AdoptionCount DESC;
+
+
+/* Query to find the least popular age to adopt cats and dogs */
+-- The results are the ages 1, 2, 4, 5, 6, and 3 are the least popular ages to adopt cats and dogs.
+
+
+WITH DogAdoptions AS (
+    SELECT
+        d.Age AS DogAge,
+        COUNT(*) AS DogAdoptionCount
+    FROM
+        Shelter s
+    JOIN
+        Dogs d ON s.DogsID = d.DogsID
+    GROUP BY
+        d.Age
+),
+CatAdoptions AS (
+    SELECT
+        ca.Age AS CatAge,
+        COUNT(*) AS CatAdoptionCount
+    FROM
+        Shelter s
+    JOIN
+        Cats ca ON s.CatsID = ca.CatsID
+    GROUP BY
+        ca.Age
+),
+TotalAdoptions AS (
+    SELECT
+        Age,
+        ISNULL(DogAdoptionCount, 0) + ISNULL(CatAdoptionCount, 0) AS TotalAdoptionCount
+    FROM
+        (
+            SELECT DISTINCT Age FROM Dogs
+            UNION
+            SELECT DISTINCT Age FROM Cats
+        ) Ages
+    LEFT JOIN
+        DogAdoptions da ON Ages.Age = da.DogAge
+    LEFT JOIN
+        CatAdoptions ca ON Ages.Age = ca.CatAge
+)
+SELECT
+    Age,
+    SUM(TotalAdoptionCount) AS TotalAdoptions
+FROM
+    TotalAdoptions
+GROUP BY
+    Age
+ORDER BY
+    TotalAdoptions;
