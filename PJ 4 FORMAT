@@ -1,0 +1,82 @@
+Marthin Mandig, Heena, Suma, Gina
+INFO 330 B
+5-26-24
+
+
+--Marthin Query
+--Query 1
+-- Retrieve information about customers, their pets, and volunteer emails for a specific year
+DECLARE @TargetYear INT = 2019; -- Change the target year as needed
+
+SELECT 
+    c.FirstName, 
+    c.LastName, 
+    c.Email AS CustomerEmail, 
+    d.Name AS DogName, 
+    d.Breed AS DogBreed, 
+    d.Age AS DogAge, 
+    ca.Name AS CatName, 
+    ca.Breed AS CatBreed, 
+    ca.Age AS CatAge, 
+    v.Email AS VolunteerEmail
+FROM 
+    Shelter s
+JOIN 
+    Customers c ON s.CustomerID = c.CustomerID
+JOIN 
+    Dogs d ON s.DogsID = d.DogsID
+JOIN 
+    Cats ca ON s.CatsID = ca.CatsID
+JOIN 
+--Query 1
+-- Retrieve information about customers, their pets, and volunteer emails for a specific year
+DECLARE @TargetYear INT = 2019; -- Change the target year as needed
+
+SELECT 
+    c.FirstName, 
+    c.LastName, 
+    c.Email AS CustomerEmail, 
+    d.Name AS DogName, 
+    d.Breed AS DogBreed, 
+    d.Age AS DogAge, 
+    ca.Name AS CatName, 
+    ca.Breed AS CatBreed, 
+    ca.Age AS CatAge, 
+    v.Email AS VolunteerEmail
+FROM 
+    Shelter s
+JOIN 
+    Customers c ON s.CustomerID = c.CustomerID
+JOIN 
+    Dogs d ON s.DogsID = d.DogsID
+JOIN 
+    Cats ca ON s.CatsID = ca.CatsID
+JOIN 
+    Volunteers v ON s.VolunteersID = v.VolunteersID
+JOIN 
+    Years y ON s.YearID = y.YearID
+WHERE 
+    y.Year = @TargetYear;
+
+
+
+--Query 2
+CREATE OR ALTER PROCEDURE usoGetTopYearsWithMostCustomers
+(
+	@Prod_type VARCHAR(50),
+	@start_year INT,
+	@end_year INT
+)
+AS
+BEGIN
+	SELECT TOP 6 WITH TIES y.Year AS CustomerYear, COUNT(*) AS CustomerCount
+	FROM Customers c
+		INNER JOIN Shelter s ON c.CustomerID = s.CustomerID
+		INNER JOIN Years y ON s.YearID = y.YearID
+	WHERE y.Year BETWEEN @start_year AND @end_year
+	GROUP BY y.Year
+	ORDER BY CustomerCount DESC;
+END
+GO
+
+EXEC usoGetTopYearsWithMostCustomers @Prod_type = 'Type', @start_year = 2010, @end_year = 2024;
