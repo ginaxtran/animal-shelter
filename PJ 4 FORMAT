@@ -185,3 +185,102 @@ GROUP BY
     Age
 ORDER BY
     TotalAdoptions;
+
+
+
+
+
+
+--------------
+-- Query to summarize monthly adoptions for each year
+-- This query shows the number of dog and cat adoptions per month for each year
+-- It helps in identifying trends and peak adoption periods
+
+WITH MonthlyAdoptions AS (
+    SELECT
+        y.Year,
+        COUNT(CASE WHEN d.DogsID IS NOT NULL THEN 1 END) AS DogAdoptions,
+        COUNT(CASE WHEN ca.CatsID IS NOT NULL THEN 1 END) AS CatAdoptions
+    FROM
+        Shelter s
+    LEFT JOIN
+        Dogs d ON s.DogsID = d.DogsID
+    LEFT JOIN
+        Cats ca ON s.CatsID = ca.CatsID
+    JOIN
+        Years y ON s.YearID = y.YearID
+    GROUP BY
+        y.Year
+)
+SELECT
+    Year,
+    DogAdoptions,
+    CatAdoptions,
+    DogAdoptions + CatAdoptions AS TotalAdoptions
+FROM
+    MonthlyAdoptions
+ORDER BY
+    Year;
+
+-- This query uses a CTE to first gather the number of dog and cat adoptions per year.
+-- It then selects and displays these counts, including a total adoption count per year.
+-- The results help in understanding adoption trends and planning resources accordingly.
+
+
+-- Query to identify customers who have adopted both a dog and a cat
+-- This query helps in understanding the behavior of customers who adopt multiple pets
+
+WITH CustomersWithDogs AS (
+    SELECT DISTINCT
+        s.CustomerID,
+        c.FirstName,
+        c.LastName,
+        COUNT(d.DogsID) AS NumberOfDogs
+    FROM
+        Shelter s
+    JOIN
+        Customers c ON s.CustomerID = c.CustomerID
+    JOIN
+        Dogs d ON s.DogsID = d.DogsID
+    GROUP BY
+        s.CustomerID,
+        c.FirstName,
+        c.LastName
+),
+CustomersWithCats AS (
+    SELECT DISTINCT
+        s.CustomerID,
+        c.FirstName,
+        c.LastName,
+        COUNT(ca.CatsID) AS NumberOfCats
+    FROM
+        Shelter s
+    JOIN
+        Customers c ON s.CustomerID = c.CustomerID
+    JOIN
+        Cats ca ON s.CatsID = ca.CatsID
+    GROUP BY
+        s.CustomerID,
+        c.FirstName,
+        c.LastName
+)
+
+SELECT
+    d.CustomerID,
+    d.FirstName,
+    d.LastName,
+    d.NumberOfDogs,
+    c.NumberOfCats
+FROM
+    CustomersWithDogs d
+JOIN
+    CustomersWithCats c ON d.CustomerID = c.CustomerID
+ORDER BY
+    d.LastName, d.FirstName;
+
+-- This query uses two CTEs to first identify customers who have adopted dogs and cats separately.
+-- It then combines these results to find customers who have adopted both dogs and cats.
+-- The results help in understanding customer behavior and planning targeted campaigns.
+
+
+
