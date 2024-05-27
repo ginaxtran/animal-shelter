@@ -21,29 +21,49 @@ GO
 /* Create tables for each entity */
 -- Customers Table
 -- Heena Vahora
+DROP TABLE IF EXISTS Customers;
 CREATE TABLE Customers (
     CustomerID INT IDENTITY(1,1) PRIMARY KEY,
     FirstName VARCHAR(50) NOT NULL,
     LastName VARCHAR(50) NOT NULL,
     Email VARCHAR(100),
-    Phone VARCHAR(15)
+    Phone VARCHAR(15),
+    Years INT NOT NULL
 );
+GO
 
-INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES
-('John', 'Doe', 'john.doe@example.com', '555-1234'),
-('Jane', 'Smith', 'jane.smith@example.com', '555-5678'),
-('Michael', 'Johnson', 'michael.johnson@example.com', '555-8765'),
-('Emily', 'Davis', 'emily.davis@example.com', '555-4321'),
-('Daniel', 'Brown', 'daniel.brown@example.com', '555-1111'),
-('Sophia', 'Wilson', 'sophia.wilson@example.com', '555-2222'),
-('James', 'Moore', 'james.moore@example.com', '555-3333'),
-('Olivia', 'Taylor', 'olivia.taylor@example.com', '555-4444'),
-('Alexander', 'Anderson', 'alexander.anderson@example.com', '555-5555'),
-('Emma', 'Thomas', 'emma.thomas@example.com', '555-6666');
+INSERT INTO Customers (FirstName, LastName, Email, Phone, Years) VALUES
+('John', 'Doe', 'john.doe@example.com', '555-1234', 2010),
+('Jane', 'Smith', 'jane.smith@example.com', '555-5678', 2011),
+('Michael', 'Johnson', 'michael.johnson@example.com', '555-8765', 2012),
+('Emily', 'Davis', 'emily.davis@example.com', '555-4321', 2013),
+('Daniel', 'Brown', 'daniel.brown@example.com', '555-1111', 2014),
+('Sophia', 'Wilson', 'sophia.wilson@example.com', '555-2222', 2015),
+('James', 'Moore', 'james.moore@example.com', '555-3333', 2016),
+('Olivia', 'Taylor', 'olivia.taylor@example.com', '555-4444', 2017),
+('Alexander', 'Anderson', 'alexander.anderson@example.com', '555-5555', 2018),
+('Emma', 'Thomas', 'emma.thomas@example.com', '555-6666', 2019),
+('Emily', 'Brown', 'emily.brown@example.com', '555-7890', 2015),
+('David', 'Wilson', 'david.wilson@example.com', '555-2345', 2010),
+('Sophie', 'Johnson', 'sophie.johnson@example.com', '555-6789', 2018),
+('Benjamin', 'Martinez', 'benjamin.martinez@example.com', '555-9876', 2016),
+('Isabella', 'Lopez', 'isabella.lopez@example.com', '555-4321', 2014),
+('Noah', 'Garcia', 'noah.garcia@example.com', '555-8765', 2019),
+('Ethan', 'Perez', 'ethan.perez@example.com', '555-3210', 2013),
+('Ava', 'Robinson', 'ava.robinson@example.com', '555-7654', 2017),
+('Mia', 'Smith', 'mia.smith@example.com', '555-2109', 2020),
+('Liam', 'Johnson', 'liam.johnson@example.com', '555-6543', 2011),
+('Oliver', 'Williams', 'oliver.williams@example.com', '555-1098', 2022),
+('Charlotte', 'Brown', 'charlotte.brown@example.com', '555-5432', 2018),
+('Henry', 'Miller', 'henry.miller@example.com', '555-0987', 2023),
+('Aiden', 'Davis', 'aiden.davis@example.com', '555-4321', 2024),
+('Ella', 'Garcia', 'ella.garcia@example.com', '555-8765', 2015);
+GO
 
 
 -- Dogs Table
 -- Marthin Mandig
+DROP TABLE IF EXISTS Dogs;
 CREATE TABLE Dogs (
     DogsID INT IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR(50) NOT NULL,
@@ -67,6 +87,7 @@ INSERT INTO Dogs(Name, Breed, Age, CustomerID) VALUES
 
 -- Cats Table
 -- Gina Tran
+DROP TABLE IF EXISTS Cats;
 CREATE TABLE Cats (
     CatsID INT IDENTITY(1,1) PRIMARY KEY,
     Name VARCHAR(50) NOT NULL,
@@ -90,12 +111,13 @@ INSERT INTO Cats(Name, Breed, Age, CustomerID) VALUES
 
 -- Years Table
 -- Suma Vegesna
+DROP TABLE IF EXISTS Years;
 CREATE TABLE Years (
     YearID INT IDENTITY(1,1) PRIMARY KEY,
     Year INT NOT NULL
 );
 
-INSERT INTO Years (Year) VALUES
+INSERT INTO Years (YearID, Year) VALUES
 (2010),
 (2011),
 (2012),
@@ -111,8 +133,12 @@ INSERT INTO Years (Year) VALUES
 (2022),
 (2023),
 (2024);
+
+
+
 -- Volunteers Table
 -- Gina Tran, Suma Vegesna
+DROP TABLE IF EXISTS Volunteers;
 CREATE TABLE Volunteers (
     VolunteersID INT IDENTITY(1,1) PRIMARY KEY,
     FirstName VARCHAR(50) NOT NULL,
@@ -122,15 +148,16 @@ CREATE TABLE Volunteers (
 );
 
 INSERT INTO Volunteers (FirstName, LastName, Email, Phone) VALUES
-('John', 'Doe', 'john.doe@example.com', '555-1234'),
-('Jane', 'Smith', 'jane.smith@example.com', '555-5678'),
-('Michael', 'Johnson', 'michael.johnson@example.com', '555-8765'),
-('Emily', 'Davis', 'emily.davis@example.com', '555-4321'),
-('Daniel', 'Brown', 'daniel.brown@example.com', '555-6789');
+('Jane', 'Doe', 'JD.doe@example.com', '555-1234'),
+('Mary', 'Smith', 'MJ.smith@example.com', '555-5678'),
+('JuJ', 'Johnson', 'juJ.johnson@example.com', '555-8765'),
+('Doug', 'Davis', 'doug.davis@example.com', '555-4321'),
+('Mike', 'Brown', 'mike.brown@example.com', '555-6789');
 
 
 -- ZIP Codes Table
 -- Heena Vahora, Marthin Mandig
+DROP TABLE IF EXISTS ZIPCodes;
 CREATE TABLE ZIPCodes (
     ZIPID INT IDENTITY(1,1) PRIMARY KEY,
     ZIPCode VARCHAR(10) NOT NULL
@@ -143,6 +170,7 @@ INSERT INTO ZIPCodes (ZIPCode) VALUES
 ('94101');
 
 /* Create the main table with computed columns and constraints */
+DROP TABLE IF EXISTS Shelter
 CREATE TABLE Shelter (
     ShelterID INT IDENTITY(1,1) PRIMARY KEY,
     CustomerID INT NOT NULL,
@@ -159,25 +187,70 @@ CREATE TABLE Shelter (
     CONSTRAINT fk_Volunteers FOREIGN KEY (VolunteersID) REFERENCES Volunteers(VolunteersID),
     CONSTRAINT fk_ZIP FOREIGN KEY (ZIPID) REFERENCES ZIPCodes(ZIPID)
 );
+--If needed to drop
+ALTER TABLE Shelter DROP CONSTRAINT fk_Customer;
+ALTER TABLE Shelter DROP CONSTRAINT fk_Dogs;
+ALTER TABLE Shelter DROP CONSTRAINT fk_Cats;
+ALTER TABLE Shelter DROP CONSTRAINT fk_Year;
+ALTER TABLE Shelter DROP CONSTRAINT fk_Volunteers;
+ALTER TABLE Shelter DROP CONSTRAINT fk_ZIP;
 
 /* Populate the tables with data */
 /* Example data */
-INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES ('John', 'Doe', 'john.doe@example.com', '555-1234');
+INSERT INTO Customers (FirstName, LastName, Email, Phone) VALUES ('John', 'Doe', 'john.doe@example.com', '555-1234', 2010);
 INSERT INTO Dogs (Name, Breed, Age, CustomerID) VALUES ('Rex', 'Labrador', 5, 1);
 INSERT INTO Cats (Name, Breed, Age, CustomerID) VALUES ('Whiskers', 'Siamese', 3, 1);
 INSERT INTO Years (Year) VALUES (2021);
 INSERT INTO Volunteers (FirstName, LastName, Email, Phone) VALUES ('Jane', 'Smith', 'jane.smith@example.com', '555-5678');
 INSERT INTO ZIPCodes (ZIPCode) VALUES ('98101');
 
-/* Example row insertion for the main table */
-INSERT INTO Shelter (CustomerID, DogsID, CatsID, YearID, VolunteersID, ZIPID) VALUES (1, 1, 1, 1, 1, 1);
+/*Example row insertion for the main table */
+INSERT INTO Shelter (CustomerID, DogsID, CatsID, YearID, VolunteersID, ZIPID) VALUES 
+(1, 1, 1, 1, 1, 1),
+(2, 2, 2, 2, 2, 2),
+(3, 3, 3, 3, 3, 3),
+(4, 4, 4, 4, 4, 4),
+(5, 5, 5, 5, 5, 5),
+(6, 6, 6, 6, 6, 6),
+(7, 7, 7, 7, 7, 7),
+(8, 8, 8, 8, 8, 8),
+(9, 9, 9, 9, 9, 9),
+(10, 10, 10, 10, 10, 10),
+(11, 11, 11, 11, 11, 11),
+(12, 12, 12, 12, 12, 12),
+(13, 13, 13, 13, 13, 13),
+(14, 14, 14, 14, 14, 14),
+(15, 15, 15, 15, 15, 15),
+(16, 16, 16, 16, 16, 16),
+(17, 17, 17, 17, 17, 17),
+(18, 18, 18, 18, 18, 18),
+(19, 19, 19, 19, 19, 19),
+(20, 20, 20, 20, 20, 20),
+(21, 21, 21, 21, 21, 21),
+(22, 22, 22, 22, 22, 22),
+(23, 23, 23, 23, 23, 23),
+(24, 24, 24, 24, 24, 24),
+(25, 25, 25, 25, 25, 25),
+(26, 26, 26, 26, 26, 26),
+(27, 27, 27, 27, 27, 27),
+(28, 28, 28, 28, 28, 28),
+(29, 29, 29, 29, 29, 29),
+(30, 30, 30, 30, 30, 30),
+(31, 31, 31, 31, 31, 31),
+(32, 32, 32, 32, 32, 32),
+(33, 33, 33, 33, 33, 33),
+(34, 34, 34, 34, 34, 34),
+(35, 35, 35, 35, 35, 35);
+
+select * FROM Shelter
+
 select * FROM Customers;
 select * FROM Dogs;
 select * FROM Cats;
 select * FROM Years;
 select * FROM Volunteers;
 select * FROM ZIPCodes;
-GO
+GO 
 
 --This procedure is for the cat table to ensure that
 CREATE OR ALTER PROCEDURE insertCatSP
@@ -267,30 +340,3 @@ GO
 EXEC insertVolunteerSP "Elua", "Joy", "ej@gmail.com", "348-489-9475";
 GO
 
---PJ 4 Question two:
-/*
-CREATE OR ALTER PROCEDURE usoGetTopSixStates
-(
-	@Prod_type VARCHAR(50),
-	@start_year INT,
-	@end_year INT
-)
-
-
-
-AS
-BEGIN
-	SELECT TOP 6 WITH TIES c.CustState, SUM(op.Calc_LineTotal) AS TotSpend
-	FROM tblCUSTOMER c
-		JOIN tblORDER o ON c.CustomerID = o.CustomerID
-		JOIN tblORDER_PRODUCT op ON o.OrderID = op.OrderID
-		JOIN tblPRODUCT p ON op.ProductID = p.ProductID
-		JOIN tblPRODUCT_TYPE pt ON p.ProdTypeID = pt.ProdTypeID
-	WHERE pt.ProdTypeName = @Prod_type
-		AND DATEPART(year,c.BirthDate) BETWEEN @start_year AND @end_year
-	GROUP BY c.CustState
-	ORDER BY TotSpend DESC
---return the result
-	RETURN;
-END
-GO */
